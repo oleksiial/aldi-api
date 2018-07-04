@@ -11,10 +11,10 @@ defmodule AldiWeb.Router do
 
   scope "/api", AldiWeb do
     pipe_through :api
-    resources "/users", UserController, only: [:index]
+    resources "/users", UserController, only: [:index, :create]
     
     pipe_through :authenticated
-    resources "/users", UserController, except: [:new, :edit, :index]
+    resources "/users", UserController, except: [:new, :edit, :index, :create]
     get "/me", UserController, :me
   end
 end
