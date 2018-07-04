@@ -22,7 +22,7 @@ defmodule Aldi.Account.User do
   end
 
   defp get_cookie(%Ecto.Changeset{changes: %{email: email, password: password}} = user) do
-    response = HTTPoison.post!(
+    headers = HTTPoison.post!(
       "https://www.bonsai-mystery.com/qm/quest/app/login/login_a.php",
       {
           :form, [
@@ -32,10 +32,10 @@ defmodule Aldi.Account.User do
             qlang: "de"
           ]
       }
-    )
-    headers = response.headers
-    loc = List.keyfind(headers, "Location", 0)
-    if elem(loc, 1) == "../main/main_m.php" do
+    ).headers
+
+    loc = List.keyfind(headers, "Location", 0) |> elem(1)
+    if loc == "../main/main_m.php" do
       cookie = List.keyfind(headers, "Set-Cookie", 0)
       cookie = ~r/^(.*);/
         |> Regex.run(elem(cookie, 1))

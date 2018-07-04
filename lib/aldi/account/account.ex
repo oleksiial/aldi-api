@@ -7,6 +7,7 @@ defmodule Aldi.Account do
   alias Aldi.Repo
 
   alias Aldi.Account.User
+  alias Aldi.Planner
 
   @doc """
   Returns the list of users.
@@ -51,9 +52,10 @@ defmodule Aldi.Account do
 
   """
   def create_user(attrs \\ %{}) do
-    %User{}
+    {:ok, user} = %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
+    {:ok, Planner.fetch_stores(user)}
   end
 
   @doc """

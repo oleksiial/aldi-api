@@ -15,6 +15,7 @@ defmodule AldiWeb.Router do
     
     pipe_through :authenticated
     resources "/users", UserController, except: [:new, :edit, :index, :create]
+    resources "/stores", StoreController, except: [:new, :edit]
     get "/me", UserController, :me
   end
 end

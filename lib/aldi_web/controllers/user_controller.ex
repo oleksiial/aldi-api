@@ -3,6 +3,7 @@ defmodule AldiWeb.UserController do
 
   alias Aldi.Account
   alias Aldi.Account.User
+  alias Aldi.Planner
 
   action_fallback AldiWeb.FallbackController
 
@@ -12,6 +13,7 @@ defmodule AldiWeb.UserController do
       |> elem(1)
     
     user = Account.get_user(cookie)
+    stores = Planner.fetch_stores(user)
     render(conn, "show.json", user: user)
   end
 
