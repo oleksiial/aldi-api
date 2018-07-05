@@ -12,7 +12,7 @@ defmodule AldiWeb.UserController do
 			|> List.keyfind("cookie", 0)
       |> elem(1)
     
-    user = Account.get_user(cookie)
+    user = Account.get_user_by_cookie(cookie)
     stores = Planner.fetch_stores(user)
     render(conn, "show.json", user: user)
   end
@@ -23,11 +23,16 @@ defmodule AldiWeb.UserController do
   end
 
   def create(conn, user_params) do
-    with {:ok, %User{} = user} <- Account.create_user(user_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", user_path(conn, :show, user))
-      |> render("show.json", user: user)
+    case Account.get_user_by_email(Map.get(user_params, "email")) do
+      nil -> with {:ok, %User{} = user} <- Account.create_user(user_params) do
+        conn
+        |> put_status(:created)
+        |> put_resp_header("location", user_path(conn, :show, user))
+        |> render("show.json", user: user)
+      end
+      user -> with {:ok, %User{} = user} <- Account.update_user(user, user_params) do
+        render(conn, "show.json", user: user)
+      end
     end
   end
 

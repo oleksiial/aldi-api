@@ -17,17 +17,17 @@ defmodule Aldi.Account.User do
     |> cast(attrs, [:email, :password])
     |> validate_required([:email, :password])
     |> unique_constraint(:email)
-    |> get_cookie()
+    |> get_cookie(attrs)
     |> validate_required([:cookie])
   end
 
-  defp get_cookie(%Ecto.Changeset{changes: %{email: email, password: password}} = user) do
+  defp get_cookie(user, attrs) do
     headers = HTTPoison.post!(
       "https://www.bonsai-mystery.com/qm/quest/app/login/login_a.php",
       {
           :form, [
-            user: email,
-            pass: password,
+            user: Map.get(attrs, "email"),
+            pass: Map.get(attrs, "password"),
             cid: "58",
             qlang: "de"
           ]
@@ -43,7 +43,7 @@ defmodule Aldi.Account.User do
 
       %Ecto.Changeset{user | changes: Map.put(user.changes, :cookie, cookie)}
     else
-      user
+      %Ecto.Changeset{user | valid?: false}
     end
   end
 end

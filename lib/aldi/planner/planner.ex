@@ -29,9 +29,10 @@ defmodule Aldi.Planner do
           |> Regex.run(response.body)
           |> Enum.at(1)
           |> String.to_integer()
+          
         IO.inspect test_id
+        # TODO create new store and assign it to the user
       end)
-    # IO.inspect new_stores
     user
   end
 

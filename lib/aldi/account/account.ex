@@ -37,7 +37,8 @@ defmodule Aldi.Account do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
-  def get_user(cookie), do: Repo.get_by(User, cookie: cookie)
+  def get_user_by_email(email), do: Repo.get_by(User, email: email)
+  def get_user_by_cookie(cookie), do: Repo.get_by(User, cookie: cookie)
 
   @doc """
   Creates a user.
@@ -52,10 +53,13 @@ defmodule Aldi.Account do
 
   """
   def create_user(attrs \\ %{}) do
-    {:ok, user} = %User{}
+    user = %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
-    {:ok, Planner.fetch_stores(user)}
+    case user do
+      {:ok, user} -> {:ok, Planner.fetch_stores(user)}
+      error -> error
+    end
   end
 
   @doc """
