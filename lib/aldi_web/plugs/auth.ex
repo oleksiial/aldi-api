@@ -9,7 +9,7 @@ defmodule AldiWeb.Plugs.Auth do
 			|> elem(1)
 
 		response = HTTPoison.get!(
-      "https://www.bonsai-mystery.com/qm/quest/app/project/projects.php?code=MzE2MTk0MDc4NnwuLi9wcm9qZWN0L3Byb2plY3RzLnBocD9zdGF0dXM9NzAw",
+      Aldi.Urls.new(),
       %{},
       hackney: [cookie: [cookie]]
 		)

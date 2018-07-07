@@ -11,7 +11,7 @@ defmodule Aldi.Planner do
 
   def fetch_stores(user) do
 		response = HTTPoison.get!(
-      "https://www.bonsai-mystery.com/qm/quest/app/project/projects.php?code=MzE2MTk0MDc4NnwuLi9wcm9qZWN0L3Byb2plY3RzLnBocD9zdGF0dXM9NzAw",
+      Aldi.Urls.new(),
       %{},
       hackney: [cookie: [user.cookie]]
     )
@@ -20,7 +20,7 @@ defmodule Aldi.Planner do
       |> Enum.map(&Enum.at(&1, 1))
       |> Enum.each(fn store_link ->
         response = HTTPoison.get!(
-          Enum.join(["https://www.bonsai-mystery.com/qm/quest/app/", store_link]),
+          Enum.join([Aldi.Urls.singleRoot(), store_link]),
           %{},
           hackney: [cookie: [user.cookie]]
         )

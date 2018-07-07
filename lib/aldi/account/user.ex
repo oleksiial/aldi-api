@@ -23,7 +23,7 @@ defmodule Aldi.Account.User do
 
   defp get_cookie(user, attrs) do
     headers = HTTPoison.post!(
-      "https://www.bonsai-mystery.com/qm/quest/app/login/login_a.php",
+      Aldi.Urls.login(),
       {
           :form, [
             user: Map.get(attrs, "email"),
