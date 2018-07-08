@@ -23,8 +23,6 @@ defmodule Aldi.Planner.Store do
       ~r/<div class='text text-muted'>(.*) <\/div><div class='text'>zu testende/
       |> Regex.run(body)
       |> Enum.at(1)
-      
-    IO.inspect address
 
     %{
       test_id: test_id,

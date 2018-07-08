@@ -16,20 +16,18 @@ defmodule Aldi.Planner do
       hackney: [cookie: [user.cookie]]
     )
 
-    new_store_links = ~r/href='..\/(.*)' class='list-group-item'/
-      |> Regex.scan(response.body)
-      |> Enum.map(&Enum.at(&1, 1))
+    rb = response.body
+      |> String.replace("\r", "")
+      |> String.replace("\n", "")
+      |> String.replace("\t", "")
+      |> String.replace("a>", "a>\r\n")
 
-    new_store_ids = ~r/Test ID (\d+)/
-      |> Regex.scan(response.body)
-      |> Enum.map(&Enum.at(&1, 1))
-
-    new_stores = Enum.zip([new_store_ids, new_store_links])
-
-    Enum.each(new_stores, fn new_store ->
-      case Aldi.Repo.get_by(Store, test_id: elem(new_store, 0)) do
+    ~r/<a href='(.*)' class.*Aldi.*Test ID ([0-9]+)<.*<\/a>/
+      |> Regex.scan(rb)
+      |> Enum.each(fn new_store ->
+        case Aldi.Repo.get_by(Store, test_id: String.to_integer(Enum.at(new_store, 2))) do
         nil -> create_store(HTTPoison.get!(
-          Enum.join([Aldi.Urls.singleRoot(), elem(new_store, 1)]),
+          Enum.join([Aldi.Urls.singleRoot(), Enum.at(new_store, 1) |> String.replace("..", "")]),
           %{},
           hackney: [cookie: [user.cookie]]
         ).body, user.id)
