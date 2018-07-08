@@ -8,6 +8,8 @@ defmodule Aldi.Account.User do
     field :email, :string, null: false
     field :password, :string, virtual: true
 
+    has_many :stores, Aldi.Planner.Store
+
     timestamps()
   end
 

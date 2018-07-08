@@ -11,15 +11,6 @@ defmodule AldiWeb.StoreController do
     render(conn, "index.json", stores: stores)
   end
 
-  def create(conn, %{"store" => store_params}) do
-    with {:ok, %Store{} = store} <- Planner.create_store(store_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", store_path(conn, :show, store))
-      |> render("show.json", store: store)
-    end
-  end
-
   def show(conn, %{"id" => id}) do
     store = Planner.get_store!(id)
     render(conn, "show.json", store: store)

@@ -20,6 +20,7 @@ defmodule Aldi.Account do
   """
   def list_users do
     Repo.all(User)
+    |> Repo.preload(:stores)
   end
 
   @doc """
@@ -36,9 +37,9 @@ defmodule Aldi.Account do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
-  def get_user_by_email(email), do: Repo.get_by(User, email: email)
-  def get_user_by_cookie(cookie), do: Repo.get_by(User, cookie: cookie)
+  def get_user!(id), do: Repo.get!(User, id) |> Repo.preload(:stores)
+  def get_user_by_email(email), do: Repo.get_by(User, email: email) |> Repo.preload(:stores)
+  def get_user_by_cookie(cookie), do: Repo.get_by(User, cookie: cookie)|> Repo.preload(:stores)
 
   @doc """
   Creates a user.
@@ -55,6 +56,7 @@ defmodule Aldi.Account do
   def create_user(attrs \\ %{}) do
     user = %User{}
     |> User.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:stores, with: &Aldi.Planner.Store.changeset/2)
     |> Repo.insert()
     case user do
       {:ok, user} -> {:ok, Planner.fetch_stores(user)}
@@ -77,6 +79,7 @@ defmodule Aldi.Account do
   def update_user(%User{} = user, attrs) do
     user
     |> User.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:stores, with: &Aldi.Planner.Store.changeset/2)
     |> Repo.update()
   end
 
