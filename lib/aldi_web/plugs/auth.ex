@@ -6,10 +6,12 @@ defmodule AldiWeb.Plugs.Auth do
 	def call(%Plug.Conn{req_headers: req_headers} = conn, _default) do
 		cookie = req_headers
 			|> List.keyfind("cookie", 0)
-		
+
 		case verify_cookie(cookie) do
 			true -> conn
-			false -> conn |> Phoenix.Controller.redirect(to: "/api/users") |> halt()
+			false -> conn
+				|> Phoenix.Controller.redirect(to: "/api/users")
+				|> halt()
 		end
 	end
 

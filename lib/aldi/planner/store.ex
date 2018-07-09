@@ -6,6 +6,7 @@ defmodule Aldi.Planner.Store do
   schema "stores" do
     field :address, :string
     field :test_id, :integer
+    field :is_done, :boolean, default: false
 
     belongs_to :user, Aldi.Account.User
 
@@ -33,7 +34,7 @@ defmodule Aldi.Planner.Store do
   @doc false
   def changeset(store, attrs) do
     store
-    |> cast(attrs, [:address, :test_id])
+    |> cast(attrs, [:address, :test_id, :is_done])
     |> validate_required([:address, :test_id])
   end
 end

@@ -5,6 +5,7 @@ defmodule Aldi.Repo.Migrations.CreateStores do
     create table(:stores) do
       add :address, :string
       add :test_id, :integer
+      add :is_done, :boolean
       add :user_id, references(:users, on_delete: :delete_all), null: false
 
       timestamps()

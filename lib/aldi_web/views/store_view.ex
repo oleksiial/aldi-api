@@ -13,6 +13,8 @@ defmodule AldiWeb.StoreView do
   def render("store.json", %{store: store}) do
     %{id: store.id,
       address: store.address,
-      test_id: store.test_id}
+      test_id: store.test_id,
+      is_done: store.is_done
+    }
   end
 end
